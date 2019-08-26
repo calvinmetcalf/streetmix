@@ -25,6 +25,7 @@ describe.skip('POST api/v1/streets', function () {
     app.post('/api/v1/streets', streets.post)
   })
 
+  console.log('hmm')
   it.skip('should respond with 201 Created when street data are sent', function () {
     return request(app)
       .post('/api/v1/streets/')
