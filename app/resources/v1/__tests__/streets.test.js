@@ -20,12 +20,11 @@ const street = {
   data: { }
 }
 
-describe('POST api/v1/streets', function () {
+describe.skip('POST api/v1/streets', function () {
   const app = setupMockServer((app) => {
     app.post('/api/v1/streets', streets.post)
   })
 
-  console.log('wtf')
   it.skip('should respond with 201 Created when street data are sent', function () {
     return request(app)
       .post('/api/v1/streets/')
