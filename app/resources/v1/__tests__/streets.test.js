@@ -27,6 +27,7 @@ describe.skip('POST api/v1/streets', function () {
 
   console.log('hmm')
   it.skip('should respond with 201 Created when street data are sent', function () {
+    console.log('hmm2')
     return request(app)
       .post('/api/v1/streets/')
       .set('Authorization', 'Streetmix realm="" loginToken="xxxxxxxx-xxxx-xxxx-xxxx-1111111111111" userId="user1"')
