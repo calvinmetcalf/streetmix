@@ -6,10 +6,8 @@
  * is not provided, assume it is injected by `TransitionGroup` and use the default
  * value of `true`.
  */
-// export const Transition = jest.fn(({ children, in: show = true }) => (show ? children : null))
+export const Transition = jest.fn(({ children, in: show = true }) => (show ? children : null))
 export const CSSTransition = jest.fn(({ children, in: show = true }) => (show ? children : null))
-export const Transition = jest.fn((props) => props.in ? props.children : null)
-// export const CSSTransition = jest.fn((props) => props.in ? props.children : null)
 
 /**
  * <TransitionGroup /> just returns its children.
