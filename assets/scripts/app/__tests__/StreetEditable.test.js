@@ -1,7 +1,7 @@
 /* eslint-env jest */
 import React from 'react'
 
-import { fireEvent, getByTestId, wait, waitForDomChange } from '@testing-library/react'
+import { fireEvent, getByTestId, wait } from '@testing-library/react'
 import { CSSTransition } from 'react-transition-group'
 
 import { renderWithRedux } from '../../../../test/helpers/render'
@@ -59,7 +59,6 @@ describe('StreetEditable', () => {
         fireEvent.mouseOver(getByTestId(wrapper.container, 'segment'))
         fireEvent.keyDown(document, { key: 'Equal', keyCode: KEYS.EQUAL, code: KEYS.EQUAL, charCode: KEYS.EQUAL })
         await wait(() => {
-          waitForDomChange({ container: wrapper.container })
           expect(wrapper.store.getState().street.segments[0].width).toEqual(400)
           expect(wrapper.store.getState().street.segments[0].warnings).toEqual([undefined, false, false, true])
           expect(wrapper.asFragment()).toMatchSnapshot()
