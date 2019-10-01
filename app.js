@@ -24,7 +24,7 @@ const initMongoDB = require('./lib/db')
 const initCloudinary = require('./lib/cloudinary')
 const exec = require('child_process').exec
 const swaggerUi = require('swagger-ui-express')
-const swaggerDocument = require('./api/swagger/swagger.json')
+const swaggerJSDoc = require('swagger-jsdoc')
 
 const client = initRedisClient()
 initMongoDB()
@@ -249,6 +249,29 @@ app.delete('/api/v1/users/:user_id/streets', cors(), resources.v1.users_streets.
 app.get('/api/v1/users/:user_id/streets', cors(), resources.v1.users_streets.get)
 
 // API: all streets
+/**
+ * @swagger
+ *
+ * /login:
+ *   post:
+ *     description: Login to the application
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: username
+ *         description: Username to use for login.
+ *         in: formData
+ *         required: true
+ *         type: string
+ *       - name: password
+ *         description: User's password.
+ *         in: formData
+ *         required: true
+ *         type: string
+ *     responses:
+ *       200:
+ *         description: login
+ */
 app.post('/api/v1/streets', resources.v1.streets.post)
 app.get('/api/v1/streets', resources.v1.streets.find)
 app.head('/api/v1/streets', resources.v1.streets.find)
@@ -323,7 +346,17 @@ if (config.env !== 'production') {
 app.get(['/:user_id/:namespaced_id', '/:user_id/:namespaced_id/:street_name'], requestHandlers.metatags)
 
 // swagger API docs
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
+const options = {
+  definition: {
+    info: {
+      title: 'Streetmix', // Title (required)
+      version: '0.1.0' // Version (required)
+    }
+  },
+  apis: ['./app.js']
+}
+const swaggerSpec = swaggerJSDoc(options)
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
 // Catch-all
 app.use((req, res) => res.render('main'))
