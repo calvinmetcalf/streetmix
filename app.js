@@ -23,6 +23,8 @@ const initRedisClient = require('./lib/redis')
 const initMongoDB = require('./lib/db')
 const initCloudinary = require('./lib/cloudinary')
 const exec = require('child_process').exec
+const swaggerUi = require('swagger-ui-express')
+const swaggerDocument = require('./api/swagger/swagger.json')
 
 const client = initRedisClient()
 initMongoDB()
@@ -319,6 +321,9 @@ if (config.env !== 'production') {
 }
 
 app.get(['/:user_id/:namespaced_id', '/:user_id/:namespaced_id/:street_name'], requestHandlers.metatags)
+
+// swagger API docs
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
 // Catch-all
 app.use((req, res) => res.render('main'))
