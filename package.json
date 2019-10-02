@@ -172,6 +172,7 @@
     "slugify": "1.3.4",
     "stripe": "7.8.0",
     "supervisor": "0.12.0",
+    "swagger-jsdoc": "3.4.0",
     "swagger-ui-express": "4.1.1",
     "twitter": "1.7.1",
     "uuid": "3.3.3",
@@ -218,8 +219,6 @@
     "stylelint-csstree-validator": "1.5.2",
     "stylelint-prettier": "1.1.1",
     "stylelint-scss": "3.10.0",
-    "supertest": "4.0.2",
-    "swagger-jsdoc": "3.4.0",
-    "swagger-ui": "3.23.11"
+    "supertest": "4.0.2"
   }
 }
