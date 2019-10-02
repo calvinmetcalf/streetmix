@@ -355,8 +355,11 @@ const options = {
   },
   apis: ['./app.js']
 }
+const displayOptions = {
+  customCss: '.swagger-ui .topbar { display: none }'
+}
 const swaggerSpec = swaggerJSDoc(options)
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, displayOptions))
 
 // Catch-all
 app.use((req, res) => res.render('main'))
