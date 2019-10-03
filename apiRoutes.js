@@ -119,6 +119,8 @@ routes.get('/api/v1/users/:user_id/streets', cors(), resources.v1.users_streets.
  * /v1/streets:
  *   post:
  *     description: Creates a street
+ *     tags:
+ *       - streets
  *     produces:
  *       - application/json
  *     parameters:
@@ -139,9 +141,11 @@ routes.post('/api/v1/streets', resources.v1.streets.post)
 
 /**
  * @swagger
- * /v1/streets:
+ * /v1/streets/:
  *   get:
  *     description: Returns streets
+ *     tags:
+ *       - streets
  *     produces:
  *      - application/json
  *     responses:
@@ -153,6 +157,8 @@ routes.post('/api/v1/streets', resources.v1.streets.post)
  *             $ref: '#/definitions/Street'
  *   head:
  *     description: Returns streets
+ *     tags:
+ *       - streets
  *     produces:
  *      - application/json
  *     responses:
@@ -167,6 +173,49 @@ routes.get('/api/v1/streets', resources.v1.streets.find)
 routes.head('/api/v1/streets', resources.v1.streets.find)
 
 // API: single street
+/**
+ * @swagger
+ * /v1/streets/{street_id}:
+ *   delete:
+ *     description: Deletes street
+ *     tags:
+ *       - streets
+ *     parameters:
+ *      - in: path
+ *        name: street_id
+ *        schema:
+ *          type: string
+ *          format: uuid
+ *        required: true
+ *        description: ID of the street to get
+ *     produces:
+ *      - application/json
+ *     responses:
+ *       200:
+ *         description: streets
+ *         schema:
+ *           $ref: '#/definitions/Street'
+ *   get:
+ *     description: Returns street
+ *     tags:
+ *       - streets
+ *     parameters:
+ *      - in: path
+ *        name: street_id
+ *        schema:
+ *          type: string
+ *          format: uuid
+ *        required: true
+ *        description: ID of the street to get
+ *     produces:
+ *      - application/json
+ *     responses:
+ *       200:
+ *         description: streets
+ *         schema:
+ *           $ref: '#/definitions/Street'
+ *
+*/
 routes.delete('/api/v1/streets/:street_id', resources.v1.streets.delete)
 routes.head('/api/v1/streets/:street_id', resources.v1.streets.get)
 routes.get('/api/v1/streets/:street_id', resources.v1.streets.get)
