@@ -268,7 +268,7 @@ const options = {
       version: '0.1.0' // Version (required)
     }
   },
-  apis: ['./app.js']
+  apis: ['./apiRoutes.js']
 }
 const displayOptions = {
   customCss: '.swagger-ui .topbar { display: none }'

@@ -39,43 +39,45 @@ routes.get('/api/v1/users/:user_id/streets', cors(), resources.v1.users_streets.
  *         type: string
  *         format: password
  *   Street:
- *     allOf:
- *       - $ref: '#/definitions/NewUser'
- *       - required:
- *         - id
- *       - properties:
- *         id:
- *           type: integer
- *           format: int64
+ *     type: object
+ *     required:
+ *       - id
+ *     properties:
+ *       id:
+ *         type: integer
+ *         format: int64
+ *       foo:
+ *         type: integer
+ *         format: int64
  */
 
 /**
  * @swagger
  *
- * /users:
+ * /v1/streets:
  *   post:
- *     description: Creates a user
+ *     description: Creates a street
  *     produces:
  *       - application/json
  *     parameters:
- *       - name: user
- *         description: User object
+ *       - name: street
+ *         description: Street object
  *         in:  body
  *         required: true
  *         type: string
  *         schema:
- *           $ref: '#/definitions/NewUser'
+ *           $ref: '#/definitions/NewStreet'
  *     responses:
  *       200:
- *         description: users
+ *         description: Streets
  *         schema:
- *           $ref: '#/definitions/User'
+ *           $ref: '#/definitions/Street'
  */
 routes.post('/api/v1/streets', resources.v1.streets.post)
 
 /**
  * @swagger
- * /streets:
+ * /v1/streets:
  *   get:
  *     description: Returns streets
  *     produces:
