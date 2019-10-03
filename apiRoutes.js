@@ -144,6 +144,15 @@ routes.post('/api/v1/streets', resources.v1.streets.post)
  * /v1/streets/:
  *   get:
  *     description: Returns streets
+ *     parameters:
+ *       - in: query
+ *         name: creatorId
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: namespaceId
+ *         schema:
+ *           type: string
  *     tags:
  *       - streets
  *     produces:
@@ -172,12 +181,30 @@ routes.post('/api/v1/streets', resources.v1.streets.post)
 routes.get('/api/v1/streets', resources.v1.streets.find)
 routes.head('/api/v1/streets', resources.v1.streets.find)
 
-// API: single street
 /**
  * @swagger
  * /v1/streets/{street_id}:
  *   delete:
  *     description: Deletes street
+ *     tags:
+ *       - streets
+ *     parameters:
+ *      - in: path
+ *        name: street_id
+ *        schema:
+ *          type: string
+ *          format: uuid
+ *        required: true
+ *        description: ID of the street to delete
+ *     produces:
+ *      - application/json
+ *     responses:
+ *       200:
+ *         description: streets
+ *         schema:
+ *           $ref: '#/definitions/Street'
+ *   head:
+ *     description: Returns street
  *     tags:
  *       - streets
  *     parameters:
@@ -207,6 +234,25 @@ routes.head('/api/v1/streets', resources.v1.streets.find)
  *          format: uuid
  *        required: true
  *        description: ID of the street to get
+ *     produces:
+ *      - application/json
+ *     responses:
+ *       200:
+ *         description: streets
+ *         schema:
+ *           $ref: '#/definitions/Street'
+ *   put:
+ *     description: Updates street
+ *     tags:
+ *       - streets
+ *     parameters:
+ *      - in: path
+ *        name: street_id
+ *        schema:
+ *          type: string
+ *          format: uuid
+ *        required: true
+ *        description: ID of the street to update
  *     produces:
  *      - application/json
  *     responses:
