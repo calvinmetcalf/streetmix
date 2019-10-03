@@ -312,6 +312,82 @@ routes.head('/api/v1/streets/:street_id', resources.v1.streets.get)
 routes.get('/api/v1/streets/:street_id', resources.v1.streets.get)
 routes.put('/api/v1/streets/:street_id', resources.v1.streets.put)
 
+/**
+ * @swagger
+ * /v1/streets/images/{street_id}:
+ *   delete:
+ *     description: Deletes street thumbnail from cloudinary
+ *     tags:
+ *       - thumbnails
+ *     parameters:
+ *      - in: path
+ *        name: street_id
+ *        schema:
+ *          type: string
+ *          format: uuid
+ *        required: true
+ *        description: ID of the street to delete
+ *     produces:
+ *      - application/json
+ *     responses:
+ *       204:
+ *         description: Success
+ *   get:
+ *     description: Returns street
+ *     tags:
+ *       - streets
+ *     parameters:
+ *      - in: path
+ *        name: street_id
+ *        schema:
+ *          type: string
+ *          format: uuid
+ *        required: true
+ *        description: ID of the street to get
+ *     produces:
+ *      - application/json
+ *     responses:
+ *       200:
+ *         description: streets
+ *         schema:
+ *           $ref: '#/definitions/Street'
+ *   put:
+ *     description: Updates street
+ *     tags:
+ *       - streets
+ *     parameters:
+ *      - in: path
+ *        name: street_id
+ *        schema:
+ *          type: string
+ *          format: uuid
+ *        required: true
+ *        description: ID of the street to update
+ *      - in: body
+ *        name: name
+ *        schema:
+ *          type: string
+ *      - in: body
+ *        name: originalStreetId
+ *        schema:
+ *          type: string
+ *          format: uuid
+ *      - in: body
+ *        name: data
+ *        description: Street data
+ *        required: true
+ *        type: string
+ *        schema:
+ *          $ref: '#/definitions/StreetData'
+ *     produces:
+ *      - application/json
+ *     responses:
+ *       200:
+ *         description: streets
+ *         schema:
+ *           $ref: '#/definitions/Street'
+ *
+*/
 routes.post('/api/v1/streets/images/:street_id', bodyParser.text({ limit: '3mb' }), resources.v1.street_images.post)
 routes.delete('/api/v1/streets/images/:street_id', resources.v1.street_images.delete)
 routes.get('/api/v1/streets/images/:street_id', resources.v1.street_images.get)
