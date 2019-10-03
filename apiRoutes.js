@@ -153,6 +153,16 @@ routes.post('/api/v1/streets', resources.v1.streets.post)
  *         name: namespaceId
  *         schema:
  *           type: string
+ *       - in: query
+ *         name: start
+ *         schema:
+ *           type: number
+ *           example: 0
+ *       - in: query
+ *         name: count
+ *         schema:
+ *           type: number
+ *           example: 20
  *     tags:
  *       - streets
  *     produces:
@@ -166,6 +176,25 @@ routes.post('/api/v1/streets', resources.v1.streets.post)
  *             $ref: '#/definitions/Street'
  *   head:
  *     description: Returns streets
+ *     parameters:
+ *       - in: query
+ *         name: creatorId
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: namespaceId
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: start
+ *         schema:
+ *           type: number
+ *           example: 0
+ *       - in: query
+ *         name: count
+ *         schema:
+ *           type: number
+ *           example: 20
  *     tags:
  *       - streets
  *     produces:
@@ -253,6 +282,22 @@ routes.head('/api/v1/streets', resources.v1.streets.find)
  *          format: uuid
  *        required: true
  *        description: ID of the street to update
+ *      - in: body
+ *        name: name
+ *        schema:
+ *          type: string
+ *      - in: body
+ *        name: originalStreetId
+ *        schema:
+ *          type: string
+ *          format: uuid
+ *      - in: body
+ *        name: data
+ *        description: Street data
+ *        required: true
+ *        type: string
+ *        schema:
+ *          $ref: '#/definitions/StreetData'
  *     produces:
  *      - application/json
  *     responses:
