@@ -1,0 +1,136 @@
+const routes = require('express').Router()
+const bodyParser = require('body-parser')
+const cors = require('cors')
+const resources = require('./app/resources')
+
+// Enable CORS for all OPTIONs "pre-flight" requests
+routes.options('/api/*', cors())
+
+// API: all users
+routes.post('/api/v1/users', cors(), resources.v1.users.post)
+routes.get('/api/v1/users', cors(), resources.v1.users.get)
+
+// API: single user
+routes.get('/api/v1/users/:user_id', cors(), resources.v1.user.get)
+routes.put('/api/v1/users/:user_id', cors(), resources.v1.user.put)
+routes.delete('/api/v1/users/:user_id', cors(), resources.v1.user.delete)
+
+// API: single user sign-in state
+routes.delete('/api/v1/users/:user_id/login-token', cors(), resources.v1.user_session.delete)
+
+// API: single user streets
+routes.delete('/api/v1/users/:user_id/streets', cors(), resources.v1.users_streets.delete)
+routes.get('/api/v1/users/:user_id/streets', cors(), resources.v1.users_streets.get)
+
+// API: all streets
+/**
+ * @swagger
+ *
+ * definitions:
+ *   NewStreet:
+ *     type: object
+ *     required:
+ *       - username
+ *       - password
+ *     properties:
+ *       username:
+ *         type: string
+ *       password:
+ *         type: string
+ *         format: password
+ *   Street:
+ *     allOf:
+ *       - $ref: '#/definitions/NewUser'
+ *       - required:
+ *         - id
+ *       - properties:
+ *         id:
+ *           type: integer
+ *           format: int64
+ */
+
+/**
+ * @swagger
+ *
+ * /users:
+ *   post:
+ *     description: Creates a user
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: user
+ *         description: User object
+ *         in:  body
+ *         required: true
+ *         type: string
+ *         schema:
+ *           $ref: '#/definitions/NewUser'
+ *     responses:
+ *       200:
+ *         description: users
+ *         schema:
+ *           $ref: '#/definitions/User'
+ */
+routes.post('/api/v1/streets', resources.v1.streets.post)
+
+/**
+ * @swagger
+ * /streets:
+ *   get:
+ *     description: Returns streets
+ *     produces:
+ *      - application/json
+ *     responses:
+ *       200:
+ *         description: streets
+ *         schema:
+ *           type: array
+ *           items:
+ *             $ref: '#/definitions/Street'
+ */
+routes.get('/api/v1/streets', resources.v1.streets.find)
+routes.head('/api/v1/streets', resources.v1.streets.find)
+
+// API: single street
+routes.delete('/api/v1/streets/:street_id', resources.v1.streets.delete)
+routes.head('/api/v1/streets/:street_id', resources.v1.streets.get)
+routes.get('/api/v1/streets/:street_id', resources.v1.streets.get)
+routes.put('/api/v1/streets/:street_id', resources.v1.streets.put)
+
+// Merge with users handler
+// routes.post('/api/v1/users', cors(), resources.v1.users_pg.post)
+
+// Merge with user handler
+// routes.get('/api/v1/users/:user_id', cors(), resources.v1.users_pg.get)
+// routes.put('/api/v1/users/:user_id', cors(), resources.v1.users_pg.put)
+
+// Merge with user_session handler
+// routes.delete('/api/v1/users/:user_id/login-token', cors(), resources.v1.users_pg.delete)
+
+// routes.get('/api/v1/users/:user_id/streets', cors(), resources.v1.users_streets_pg.get)
+
+// routes.post('/api/v1/streets', resources.v1.streets_pg.post)
+// routes.get('/api/v1/streets', resources.v1.streets_pg.find)
+// routes.head('/api/v1/streets', resources.v1.streets_pg.find)
+
+// routes.delete('/api/v1/streets/:street_id', resources.v1.streets_pg.delete)
+// routes.head('/api/v1/streets/:street_id', resources.v1.streets_pg.get)
+// routes.get('/api/v1/streets/:street_id', resources.v1.streets_pg.get)
+// routes.put('/api/v1/streets/:street_id', resources.v1.streets_pg.put)
+
+routes.post('/api/v1/streets/images/:street_id', bodyParser.text({ limit: '3mb' }), resources.v1.street_images.post)
+routes.delete('/api/v1/streets/images/:street_id', resources.v1.street_images.delete)
+routes.get('/api/v1/streets/images/:street_id', resources.v1.street_images.get)
+
+routes.get('/api/v1/geo', cors(), resources.v1.geo.get)
+
+routes.get('/api/v1/translate/:locale_code/:resource_name', resources.v1.translate.get)
+
+routes.get('/api/v1/flags', cors(), resources.v1.flags.get)
+
+// Catch all for all broken api paths, direct to 404 response.
+routes.get('/api/*', (req, res) => {
+  res.status(404).json({ status: 404, error: 'Not found. Did you mispell something?' })
+})
+
+module.exports = routes

@@ -10,7 +10,7 @@ const compression = require('compression')
 const cookieParser = require('cookie-parser')
 const cookieSession = require('cookie-session')
 const express = require('express')
-const bodyParser = require('body-parser')
+// const bodyParser = require('body-parser')
 const cors = require('cors')
 const helmet = require('helmet')
 const config = require('config')
@@ -25,6 +25,7 @@ const initCloudinary = require('./lib/cloudinary')
 const exec = require('child_process').exec
 const swaggerUi = require('swagger-ui-express')
 const swaggerJSDoc = require('swagger-jsdoc')
+const apiRoutes = require('./apiRoutes')
 
 const client = initRedisClient()
 initMongoDB()
@@ -229,85 +230,8 @@ app.get('/' + config.twitter.oauth_callback_path, controllers.twitter_sign_in_ca
 // Auth0
 app.get('/' + config.auth0.callback_path, controllers.auth0_sign_in_callback.get)
 
-// Enable CORS for all OPTIONs "pre-flight" requests
-app.options('/api/*', cors())
-
-// API: all users
-app.post('/api/v1/users', cors(), resources.v1.users.post)
-app.get('/api/v1/users', cors(), resources.v1.users.get)
-
-// API: single user
-app.get('/api/v1/users/:user_id', cors(), resources.v1.user.get)
-app.put('/api/v1/users/:user_id', cors(), resources.v1.user.put)
-app.delete('/api/v1/users/:user_id', cors(), resources.v1.user.delete)
-
-// API: single user sign-in state
-app.delete('/api/v1/users/:user_id/login-token', cors(), resources.v1.user_session.delete)
-
-// API: single user streets
-app.delete('/api/v1/users/:user_id/streets', cors(), resources.v1.users_streets.delete)
-app.get('/api/v1/users/:user_id/streets', cors(), resources.v1.users_streets.get)
-
-// API: all streets
-/**
- * @swagger
- *
- * /login:
- *   post:
- *     description: Login to the application
- *     produces:
- *       - application/json
- *     parameters:
- *       - name: username
- *         description: Username to use for login.
- *         in: formData
- *         required: true
- *         type: string
- *       - name: password
- *         description: User's password.
- *         in: formData
- *         required: true
- *         type: string
- *     responses:
- *       200:
- *         description: login
- */
-app.post('/api/v1/streets', resources.v1.streets.post)
-app.get('/api/v1/streets', resources.v1.streets.find)
-app.head('/api/v1/streets', resources.v1.streets.find)
-
-// API: single street
-app.delete('/api/v1/streets/:street_id', resources.v1.streets.delete)
-app.head('/api/v1/streets/:street_id', resources.v1.streets.get)
-app.get('/api/v1/streets/:street_id', resources.v1.streets.get)
-app.put('/api/v1/streets/:street_id', resources.v1.streets.put)
-
-// Merge with users handler
-// app.post('/api/v1/users', cors(), resources.v1.users_pg.post)
-
-// Merge with user handler
-// app.get('/api/v1/users/:user_id', cors(), resources.v1.users_pg.get)
-// app.put('/api/v1/users/:user_id', cors(), resources.v1.users_pg.put)
-
-// Merge with user_session handler
-// app.delete('/api/v1/users/:user_id/login-token', cors(), resources.v1.users_pg.delete)
-
-// app.get('/api/v1/users/:user_id/streets', cors(), resources.v1.users_streets_pg.get)
-
-// app.post('/api/v1/streets', resources.v1.streets_pg.post)
-// app.get('/api/v1/streets', resources.v1.streets_pg.find)
-// app.head('/api/v1/streets', resources.v1.streets_pg.find)
-
-// app.delete('/api/v1/streets/:street_id', resources.v1.streets_pg.delete)
-// app.head('/api/v1/streets/:street_id', resources.v1.streets_pg.get)
-// app.get('/api/v1/streets/:street_id', resources.v1.streets_pg.get)
-// app.put('/api/v1/streets/:street_id', resources.v1.streets_pg.put)
-
-app.post('/api/v1/streets/images/:street_id', bodyParser.text({ limit: '3mb' }), resources.v1.street_images.post)
-app.delete('/api/v1/streets/images/:street_id', resources.v1.street_images.delete)
-app.get('/api/v1/streets/images/:street_id', resources.v1.street_images.get)
-
-app.get('/api/v1/geo', cors(), resources.v1.geo.get)
+// API routes
+app.use('', apiRoutes)
 
 app.post('/services/pay', resources.services.payments.post)
 
@@ -315,15 +239,6 @@ app.get('/services/geoip', resources.services.geoip.get)
 
 app.options('/services/images', cors())
 app.get('/services/images', cors(), resources.services.images.get)
-
-app.get('/api/v1/translate/:locale_code/:resource_name', resources.v1.translate.get)
-
-app.get('/api/v1/flags', cors(), resources.v1.flags.get)
-
-// Catch all for all broken api paths, direct to 404 response.
-app.get('/api/*', (req, res) => {
-  res.status(404).json({ status: 404, error: 'Not found. Did you mispell something?' })
-})
 
 // SVG bundled images served directly from packages
 app.get('/assets/images/icons.svg', (req, res) => {
