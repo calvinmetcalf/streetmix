@@ -27,17 +27,62 @@ routes.get('/api/v1/users/:user_id/streets', cors(), resources.v1.users_streets.
  * @swagger
  *
  * definitions:
+ *   Segment:
+ *     type: object
+ *     required:
+ *       - type
+ *       - width
+ *       - variantString
+ *     properties:
+ *       type:
+ *         type: string
+ *       variantString:
+ *         type: string
+ *       width:
+ *         type: integer
+ *       randSeed:
+ *         type: integer
+ *   StreetData:
+ *     type: object
+ *     properties:
+ *       street:
+ *         type: object
+ *         properties:
+ *           schemaVersion:
+ *             type: integer
+ *           width:
+ *             type: integer
+ *           id:
+ *             type: string
+ *             format: uuid
+ *           units:
+ *             type: number
+ *           location:
+ *             type: object
+ *           userUpdated:
+ *             type: boolean
+ *           environment:
+ *             type: string
+ *           leftBuildingHeight:
+ *             type: string
+ *           rightBuildingHeight:
+ *             type: string
+ *           segments:
+ *             type: array
+ *             items:
+ *               $ref: '#/definitions/Segment'
+ *           editCount:
+ *             type: integer
  *   NewStreet:
  *     type: object
  *     required:
- *       - username
+ *       - data
  *       - password
  *     properties:
- *       username:
+ *       name:
  *         type: string
- *       password:
- *         type: string
- *         format: password
+ *       data:
+ *         $ref: '#/definitions/StreetData'
  *   Street:
  *     type: object
  *     required:
@@ -49,14 +94,23 @@ routes.get('/api/v1/users/:user_id/streets', cors(), resources.v1.users_streets.
  *       namespacedId:
  *         type: integer
  *         format: int64
+ *       status:
+ *         type: string
+ *         example: "ACTIVE"
+ *       name:
+ *         type: string
+ *       creator_id:
+ *         type: string
+ *       creator_ip:
+ *         type: string
  *       data:
- *         type: object
- *         properties:
- *           street:
- *             type: object
- *             properties:
- *               schemaVersion:
- *                 type: integer
+ *         $ref: '#/definitions/StreetData'
+ *       createdAt:
+ *         type: string
+ *         format: date-time
+ *       updatedAt:
+ *         type: string
+ *         format: date-time
  */
 
 /**
@@ -87,6 +141,17 @@ routes.post('/api/v1/streets', resources.v1.streets.post)
  * @swagger
  * /v1/streets:
  *   get:
+ *     description: Returns streets
+ *     produces:
+ *      - application/json
+ *     responses:
+ *       200:
+ *         description: streets
+ *         schema:
+ *           type: array
+ *           items:
+ *             $ref: '#/definitions/Street'
+ *   head:
  *     description: Returns streets
  *     produces:
  *      - application/json
