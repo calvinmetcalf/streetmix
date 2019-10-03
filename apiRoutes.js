@@ -44,11 +44,19 @@ routes.get('/api/v1/users/:user_id/streets', cors(), resources.v1.users_streets.
  *       - id
  *     properties:
  *       id:
+ *         type: string
+ *         format: uuid
+ *       namespacedId:
  *         type: integer
  *         format: int64
- *       foo:
- *         type: integer
- *         format: int64
+ *       data:
+ *         type: object
+ *         properties:
+ *           street:
+ *             type: object
+ *             properties:
+ *               schemaVersion:
+ *                 type: integer
  */
 
 /**
@@ -98,27 +106,6 @@ routes.delete('/api/v1/streets/:street_id', resources.v1.streets.delete)
 routes.head('/api/v1/streets/:street_id', resources.v1.streets.get)
 routes.get('/api/v1/streets/:street_id', resources.v1.streets.get)
 routes.put('/api/v1/streets/:street_id', resources.v1.streets.put)
-
-// Merge with users handler
-// routes.post('/api/v1/users', cors(), resources.v1.users_pg.post)
-
-// Merge with user handler
-// routes.get('/api/v1/users/:user_id', cors(), resources.v1.users_pg.get)
-// routes.put('/api/v1/users/:user_id', cors(), resources.v1.users_pg.put)
-
-// Merge with user_session handler
-// routes.delete('/api/v1/users/:user_id/login-token', cors(), resources.v1.users_pg.delete)
-
-// routes.get('/api/v1/users/:user_id/streets', cors(), resources.v1.users_streets_pg.get)
-
-// routes.post('/api/v1/streets', resources.v1.streets_pg.post)
-// routes.get('/api/v1/streets', resources.v1.streets_pg.find)
-// routes.head('/api/v1/streets', resources.v1.streets_pg.find)
-
-// routes.delete('/api/v1/streets/:street_id', resources.v1.streets_pg.delete)
-// routes.head('/api/v1/streets/:street_id', resources.v1.streets_pg.get)
-// routes.get('/api/v1/streets/:street_id', resources.v1.streets_pg.get)
-// routes.put('/api/v1/streets/:street_id', resources.v1.streets_pg.put)
 
 routes.post('/api/v1/streets/images/:street_id', bodyParser.text({ limit: '3mb' }), resources.v1.street_images.post)
 routes.delete('/api/v1/streets/images/:street_id', resources.v1.street_images.delete)
