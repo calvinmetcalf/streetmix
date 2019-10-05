@@ -73,6 +73,8 @@ routes.get('/api/v1/users/:user_id/streets', cors(), resources.v1.users_streets.
  *               $ref: '#/definitions/Segment'
  *           editCount:
  *             type: integer
+ *   NewStreetImage:
+ *     $ref: '#/definitions/StreetImageData'
  *   NewStreet:
  *     type: object
  *     required:
@@ -326,16 +328,16 @@ routes.put('/api/v1/streets/:street_id', resources.v1.streets.put)
  *          type: string
  *          format: uuid
  *        required: true
- *        description: ID of the street to delete
+ *        description: ID of the street
  *     produces:
  *      - application/json
  *     responses:
  *       204:
  *         description: Success
  *   get:
- *     description: Returns street
+ *     description: Returns street thumbnail from cloudinary, mainly used to set metatag information for social sharing cards
  *     tags:
- *       - streets
+ *       - thumbnails
  *     parameters:
  *      - in: path
  *        name: street_id
@@ -343,49 +345,42 @@ routes.put('/api/v1/streets/:street_id', resources.v1.streets.put)
  *          type: string
  *          format: uuid
  *        required: true
- *        description: ID of the street to get
+ *        description: ID of the street
  *     produces:
  *      - application/json
  *     responses:
  *       200:
- *         description: streets
+ *         description: street image
  *         schema:
- *           $ref: '#/definitions/Street'
- *   put:
+ *           $ref: '#/definitions/StreetImageData'
+ *       204:
+ *         description: Empty response. The owner of this street has deleted the thumbnail.
+ *   post:
  *     description: Updates street
  *     tags:
- *       - streets
+ *       - thumbnails
  *     parameters:
- *      - in: path
- *        name: street_id
- *        schema:
- *          type: string
- *          format: uuid
- *        required: true
- *        description: ID of the street to update
- *      - in: body
- *        name: name
- *        schema:
- *          type: string
- *      - in: body
- *        name: originalStreetId
- *        schema:
- *          type: string
- *          format: uuid
- *      - in: body
- *        name: data
- *        description: Street data
- *        required: true
- *        type: string
- *        schema:
- *          $ref: '#/definitions/StreetData'
+ *       - in: path
+ *         name: street_id
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         required: true
+ *         description: ID of the street to update
+ *       - in: body
+ *         name: street image
+ *         description: Street image object
+ *         required: true
+ *         type: string
+ *         schema:
+ *           $ref: '#/definitions/NewStreetImage'
  *     produces:
  *      - application/json
  *     responses:
  *       200:
- *         description: streets
+ *         description: street image
  *         schema:
- *           $ref: '#/definitions/Street'
+ *           $ref: '#/definitions/StreetImageData'
  *
 */
 routes.post('/api/v1/streets/images/:street_id', bodyParser.text({ limit: '3mb' }), resources.v1.street_images.post)
