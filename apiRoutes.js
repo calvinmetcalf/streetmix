@@ -3,30 +3,49 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const resources = require('./app/resources')
 
-// Enable CORS for all OPTIONs "pre-flight" requests
-routes.options('/api/*', cors())
-
-// API: all users
-routes.post('/api/v1/users', cors(), resources.v1.users.post)
-routes.get('/api/v1/users', cors(), resources.v1.users.get)
-
-// API: single user
-routes.get('/api/v1/users/:user_id', cors(), resources.v1.user.get)
-routes.put('/api/v1/users/:user_id', cors(), resources.v1.user.put)
-routes.delete('/api/v1/users/:user_id', cors(), resources.v1.user.delete)
-
-// API: single user sign-in state
-routes.delete('/api/v1/users/:user_id/login-token', cors(), resources.v1.user_session.delete)
-
-// API: single user streets
-routes.delete('/api/v1/users/:user_id/streets', cors(), resources.v1.users_streets.delete)
-routes.get('/api/v1/users/:user_id/streets', cors(), resources.v1.users_streets.get)
-
-// API: all streets
 /**
  * @swagger
  *
  * definitions:
+ *   UserData:
+ *     type: object
+ *     properties:
+ *       lastStreetId:
+ *         type: string
+ *         format: uuid
+ *       lastStreetNamespacedId:
+ *         type: integer
+ *       lastStreetCreatorId:
+ *         type: string
+ *       saveAsImageTransparentSky:
+ *         type: boolean
+ *       saveAsImageSegmentNamesAndWidths:
+ *         type: boolean
+ *       saveAsImageStreetName:
+ *         type: boolean
+ *       newStreetPreference:
+ *         type: integer
+ *   User:
+ *     type: object
+ *     properties:
+ *       id:
+ *         type: string
+ *       data:
+ *         $ref: '#/definitions/UserData'
+ *       createdAt:
+ *         type: string
+ *         format: date-time
+ *       updatedAt:
+ *        type: string
+ *        format: date-time
+ *       profileImageUrl:
+ *         type: string
+ *         example: "https://pbs.twimg.com/profile_images/461825032621027328/j8-0jPD5_normal.png"
+ *       roles:
+ *         type: array
+ *         items:
+ *           type: string
+ *           example: "USER"
  *   Language:
  *     type: object
  *     properties:
@@ -193,6 +212,161 @@ routes.get('/api/v1/users/:user_id/streets', cors(), resources.v1.users_streets.
  *         type: string
  *         format: date-time
  */
+
+// Enable CORS for all OPTIONs "pre-flight" requests
+routes.options('/api/*', cors())
+
+// API: all users
+
+/**
+ * @swagger
+ *
+ * /v1/users:
+ *   post:
+ *     description: Creates a user
+ *     tags:
+ *       - users
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: user
+ *         description: User object
+ *         in:  body
+ *         required: true
+ *         type: string
+ *         schema:
+ *           $ref: '#/definitions/NewUser'
+ *     responses:
+ *       200:
+ *         description: Streets
+ *         schema:
+ *           $ref: '#/definitions/User'
+ */
+routes.post('/api/v1/users', cors(), resources.v1.users.post)
+
+/**
+ * @swagger
+ * /v1/users/:
+ *   get:
+ *     description: Returns users
+ *     parameters:
+ *       - in: params
+ *         name: userId
+ *         schema:
+ *           type: string
+ *           required: true
+ *     tags:
+ *       - users
+ *     produces:
+ *      - application/json
+ *     responses:
+ *       200:
+ *         description: User
+ *         schema:
+ *           type: array
+ *           items:
+ *             $ref: '#/definitions/User'
+ */
+routes.get('/api/v1/users', cors(), resources.v1.users.get)
+
+// API: single user
+
+/**
+ * @swagger
+ * /v1/users/{user_id}:
+ *   delete:
+ *     description: Deletes user
+ *     tags:
+ *       - users
+ *     parameters:
+ *      - in: path
+ *        name: user_id
+ *        schema:
+ *          type: string
+ *          format: uuid
+ *        required: true
+ *        description: ID of the user to delete
+ *     produces:
+ *      - application/json
+ *     responses:
+ *       200:
+ *         description: users
+ *         schema:
+ *           $ref: '#/definitions/User'
+ *   get:
+ *     description: Returns user
+ *     tags:
+ *       - users
+ *     parameters:
+ *      - in: path
+ *        name: user_id
+ *        schema:
+ *          type: string
+ *          format: uuid
+ *        required: true
+ *        description: ID of the user to get
+ *     produces:
+ *      - application/json
+ *     responses:
+ *       200:
+ *         description: users
+ *         schema:
+ *           $ref: '#/definitions/User'
+ *   put:
+ *     description: Updates user
+ *     tags:
+ *       - users
+ *     parameters:
+ *      - in: path
+ *        name: user_id
+ *        schema:
+ *          type: string
+ *          format: uuid
+ *        description: ID of the user to update
+ *      - in: body
+ *        name: id
+ *        schema:
+ *          type: string
+ *      - in: body
+ *        name: profileImageUrl
+ *        schema:
+ *          type: string
+ *          format: uuid
+ *      - in: body
+ *        name: roles
+ *        type: array
+ *        items:
+ *          type: string
+ *          example: "USER"
+ *      - in: body
+ *        name: flags
+ *        type: object
+ *      - in: body
+ *        name: data
+ *        description: user data
+ *        required: true
+ *        type: string
+ *        schema:
+ *          $ref: '#/definitions/UserData'
+ *     produces:
+ *      - application/json
+ *     responses:
+ *       200:
+ *         description: users
+ *         schema:
+ *           $ref: '#/definitions/User'
+ *
+*/
+routes.get('/api/v1/users/:user_id', cors(), resources.v1.user.get)
+routes.put('/api/v1/users/:user_id', cors(), resources.v1.user.put)
+routes.delete('/api/v1/users/:user_id', cors(), resources.v1.user.delete)
+
+// API: single user sign-in state
+routes.delete('/api/v1/users/:user_id/login-token', cors(), resources.v1.user_session.delete)
+
+// API: single user streets
+routes.delete('/api/v1/users/:user_id/streets', cors(), resources.v1.users_streets.delete)
+routes.get('/api/v1/users/:user_id/streets', cors(), resources.v1.users_streets.get)
 
 /**
  * @swagger
