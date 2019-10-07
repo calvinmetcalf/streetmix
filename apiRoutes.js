@@ -367,7 +367,7 @@ routes.delete('/api/v1/users/:user_id', cors(), resources.v1.user.delete)
  *   delete:
  *     description: Revokes a user's current loginToken
  *     tags:
- *       - authentication
+ *       - users
  *     parameters:
  *      - in: path
  *        name: user_id
