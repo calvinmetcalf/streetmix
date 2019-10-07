@@ -11,13 +11,11 @@ const cookieParser = require('cookie-parser')
 const cookieSession = require('cookie-session')
 const express = require('express')
 // const bodyParser = require('body-parser')
-const cors = require('cors')
 const helmet = require('helmet')
 const config = require('config')
 const path = require('path')
 const uuid = require('uuid/v4')
 const controllers = require('./app/controllers')
-const resources = require('./app/resources')
 const requestHandlers = require('./lib/request_handlers')
 const initRedisClient = require('./lib/redis')
 const initMongoDB = require('./lib/db')
@@ -26,6 +24,7 @@ const exec = require('child_process').exec
 const swaggerUi = require('swagger-ui-express')
 const swaggerJSDoc = require('swagger-jsdoc')
 const apiRoutes = require('./apiRoutes')
+const serviceRoutes = require('./serviceRoutes')
 
 const client = initRedisClient()
 initMongoDB()
@@ -232,13 +231,7 @@ app.get('/' + config.auth0.callback_path, controllers.auth0_sign_in_callback.get
 
 // API routes
 app.use('', apiRoutes)
-
-app.post('/services/pay', resources.services.payments.post)
-
-app.get('/services/geoip', resources.services.geoip.get)
-
-app.options('/services/images', cors())
-app.get('/services/images', cors(), resources.services.images.get)
+app.use('', serviceRoutes)
 
 // SVG bundled images served directly from packages
 app.get('/assets/images/icons.svg', (req, res) => {
@@ -268,7 +261,7 @@ const options = {
       version: '0.1.0' // Version (required)
     }
   },
-  apis: ['./apiRoutes.js']
+  apis: ['./apiRoutes.js', './serviceRoutes.js']
 }
 const displayOptions = {
   customCss: '.swagger-ui .topbar { display: none }'

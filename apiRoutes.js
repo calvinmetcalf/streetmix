@@ -27,6 +27,85 @@ routes.get('/api/v1/users/:user_id/streets', cors(), resources.v1.users_streets.
  * @swagger
  *
  * definitions:
+ *   Language:
+ *     type: object
+ *     properties:
+ *       code:
+ *         type: string
+ *         example: "en"
+ *       name:
+ *         type: string
+ *         example: "English"
+ *       native:
+ *         type: string
+ *         example: "English"
+ *   GeolocationResponse:
+ *     type: object
+ *     properties:
+ *       ip:
+ *         type: string
+ *       type:
+ *         type: string
+ *         example: "ipv4"
+ *       continent_code:
+ *         type: string
+ *         example: "NA"
+ *       continent_name:
+ *         type: string
+ *         example: "North America"
+ *       country_code:
+ *         type: string
+ *         example: "US"
+ *       country_name:
+ *         type: string
+ *         example: "United States"
+ *       region_code:
+ *         type: string
+ *         example: "NY"
+ *       region_name:
+ *         type: string
+ *         example: "New York"
+ *       city:
+ *         type: string
+ *         example: "Astoria"
+ *       zip:
+ *         type: string
+ *         example: "11106"
+ *       latitude:
+ *         type: number
+ *         format: float
+ *       longitude:
+ *         type: number
+ *         format: float
+ *       location:
+ *         type: object
+ *         properties:
+ *           geoname_id:
+ *             type: integer
+ *             example: 5107464
+ *           capital:
+ *             type: string
+ *             example: "Washington D.C."
+ *           languages:
+ *             type: array
+ *             items:
+ *               $ref: '#/definitions/Language'
+ *   StreetImageData:
+ *     type: object
+ *     properties:
+ *       public_id:
+ *         type: string
+ *       width:
+ *         type: integer
+ *       height:
+ *         type: integer
+ *       format:
+ *         type: string
+ *       secure_url:
+ *         type: string
+ *       created_at:
+ *         type: string
+ *         format: date-time
  *   Segment:
  *     type: object
  *     required:
@@ -320,7 +399,7 @@ routes.put('/api/v1/streets/:street_id', resources.v1.streets.put)
  *   delete:
  *     description: Deletes street thumbnail from cloudinary
  *     tags:
- *       - thumbnails
+ *       - images
  *     parameters:
  *      - in: path
  *        name: street_id
@@ -337,7 +416,7 @@ routes.put('/api/v1/streets/:street_id', resources.v1.streets.put)
  *   get:
  *     description: Returns street thumbnail from cloudinary, mainly used to set metatag information for social sharing cards
  *     tags:
- *       - thumbnails
+ *       - images
  *     parameters:
  *      - in: path
  *        name: street_id
@@ -356,9 +435,9 @@ routes.put('/api/v1/streets/:street_id', resources.v1.streets.put)
  *       204:
  *         description: Empty response. The owner of this street has deleted the thumbnail.
  *   post:
- *     description: Updates street
+ *     description: Creates a street thumbnail
  *     tags:
- *       - thumbnails
+ *       - images
  *     parameters:
  *       - in: path
  *         name: street_id
@@ -387,11 +466,29 @@ routes.post('/api/v1/streets/images/:street_id', bodyParser.text({ limit: '3mb' 
 routes.delete('/api/v1/streets/images/:street_id', resources.v1.street_images.delete)
 routes.get('/api/v1/streets/images/:street_id', resources.v1.street_images.get)
 
-routes.get('/api/v1/geo', cors(), resources.v1.geo.get)
-
+/**
+ * @swagger
+ * /api/v1/translate/{locale_code}/{resource_name}:
+ *   get:
+ *     description: Returns geolocation data for the current user
+ *     parameters:
+ *       - in: path
+ *         name: locale_code
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: resource_name
+ *         schema:
+ *           type: string
+ *     tags:
+ *       - translation
+ *     produces:
+ *      - application/json
+ *     responses:
+ *       200:
+ *         description: Translations for streetmix resources. Shape depends on resource.
+ */
 routes.get('/api/v1/translate/:locale_code/:resource_name', resources.v1.translate.get)
-
-routes.get('/api/v1/flags', cors(), resources.v1.flags.get)
 
 // Catch all for all broken api paths, direct to 404 response.
 routes.get('/api/*', (req, res) => {
