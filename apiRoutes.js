@@ -235,7 +235,7 @@ routes.options('/api/*', cors())
  *         required: true
  *         type: string
  *         schema:
- *           $ref: '#/definitions/NewUser'
+ *           $ref: '#/definitions/User'
  *     responses:
  *       200:
  *         description: Streets
@@ -361,10 +361,71 @@ routes.get('/api/v1/users/:user_id', cors(), resources.v1.user.get)
 routes.put('/api/v1/users/:user_id', cors(), resources.v1.user.put)
 routes.delete('/api/v1/users/:user_id', cors(), resources.v1.user.delete)
 
-// API: single user sign-in state
+/**
+ * @swagger
+ * /api/v1/users/{user_id}/login-token:
+ *   delete:
+ *     description: Revokes a user's current loginToken
+ *     tags:
+ *       - authentication
+ *     parameters:
+ *      - in: path
+ *        name: user_id
+ *        schema:
+ *          type: string
+ *          format: uuid
+ *        required: true
+ *        description: ID of the user
+ *     produces:
+ *      - application/json
+ *     responses:
+ *       200:
+ *         description: succesfully removed loginToken
+ */
 routes.delete('/api/v1/users/:user_id/login-token', cors(), resources.v1.user_session.delete)
 
-// API: single user streets
+/**
+ * @swagger
+ * /api/v1/users/{user_id}/streets:
+ *   delete:
+ *     description: Sets status to DELETED for ALL the streets of a given user
+ *     tags:
+ *       - users
+ *     parameters:
+ *      - in: path
+ *        name: user_id
+ *        schema:
+ *          type: string
+ *          format: uuid
+ *        required: true
+ *        description: ID of the user
+ *     produces:
+ *      - application/json
+ *     responses:
+ *       200:
+ *         description: succesfully deleted streets
+ *   get:
+ *     description: Returns all streets by a given user
+ *     parameters:
+ *      - in: path
+ *        name: user_id
+ *        schema:
+ *          type: string
+ *          format: uuid
+ *        required: true
+ *        description: ID of the user
+ *     tags:
+ *       - users
+ *     produces:
+ *      - application/json
+ *     responses:
+ *       200:
+ *         description: user streets
+ *         schema:
+ *           type: array
+ *           items:
+ *             $ref: '#/definitions/Street'
+ */
 routes.delete('/api/v1/users/:user_id/streets', cors(), resources.v1.users_streets.delete)
 routes.get('/api/v1/users/:user_id/streets', cors(), resources.v1.users_streets.get)
 
